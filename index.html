@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300i,400&display=swap" rel="stylesheet">
+
+    <script src="convert.js"></script>
+
+<style>
+        body {
+            font-family: 'Source Sans Pro';
+        }
+
+        nav {
+            border-bottom: 1.5px solid rgb(173, 181, 189);
+        }
+
+        input {
+            padding-left: 1rem !important;
+            border-color: rgb(173, 181, 189) !important;
+        }
+
+        .custom-control-input {
+            margin-left: 1rem !important;
+        }
+
+        textarea {
+            border-color: rgb(173, 181, 189) !important;
+        }
+
+        textarea,
+        button,
+        input {
+            border-radius: .4rem !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-white fixed-top p-3 mb-5 ">
+        <a class="navbar-brand pl-5 text-secondary" href="#"><b>Google Sheets</b> to <b>JSON</b></a>
+    </nav>
+    <main>
+        <div class="container mt-5 text-dark">
+            <h1 class='pt-5'>Convert Online</h1>
+            <p>Follow the steps below to convert a Google Sheet to JSON right on this page. This tool assumes that headers are in the first row of the spreadsheet and that data is stored in rows.</p>
+            <h2 class='mt-3'>Step 1: Publish Google Sheet to the Web</h2>
+            <p>According to Google, a published Sheet refreshes up to every 5 minutes, so your outputted data may be delayed
+                by a few minutes.</p>
+            <h2 class='mt-3'>Step 2: Paste Sheet URL</h2>
+            <form>
+                <div class="form-group">
+                    <label for="sheet_url">Sheet URL:</label>
+                    <input type="text" class="form-control " id="sheet_url" placeholder="URL" name="url">
+                </div>
+                <div class="form-group">
+                    <label for="sheet_number">Sheet Number:</label>
+                    <input type="text" class="form-control w-25" id="sheet_number" placeholder="Sheet Number" name="num">
+                </div>
+                <!-- <h3 class='mt-4'>Options</h3>
+                <div class="custom-control custom-checkbox mb-3 ml-1">
+                    <input class="custom-control-input" type="checkbox" value="" id="first_row_header" name="headerfirst">
+                    <label class="custom-control-label" for="first_row_header">
+                        First row contains header
+                    </label>
+                </div>
+                <div class="custom-control custom-checkbox mb-3 ml-1">
+                    <input class="custom-control-input" type="checkbox" value="" id="keep_first_row" name="keepfirst">
+                    <label class="custom-control-label" for="keep_first_row">
+                        Keep first row
+                    </label>
+                </div>
+                <div class="custom-control custom-checkbox ml-1">
+                    <input class="custom-control-input" type="checkbox" value="" id="parse" name="parse">
+                    <label class="custom-control-label" for="parse">
+                        Attempt to parse numbers
+                    </label>
+                </div> -->
+                <button type='submit' class='btn btn-primary my-4 px-3 font-weight-bold text-uppercase'>Submit</button>
+            </form>
+            <h2>JSON Output</h2>
+            <textarea class='form-control mb-5' id='put' rows='10'></textarea>
+
+            <!-- <h1>Use Source Code</h1>
+            <p>
+                If you don't want to use the online tool, you can also use the code inside your JavaScript applications.
+                This is useful if you want to use data in a Google
+                Sheet as a JSON endpoint.
+            </p>
+            <h3>Step 1: Copy the function below</h3>
+            <div class='code p-5 rounded mb-5 bg-light'>
+                fetch('https://spreadsheets.google.com/feeds/cells/1BGIwq8YTtXVaFZjRDPbZcZNe06KYFepPu3CG1lvyVpM/1/public/full?alt=json')
+                .then((response) => {
+                return response.json();
+                })
+                .then((data) => {
+                let rows = []
+                let headers = []
+                data['feed']['entry'].forEach((cell) => {
+                rownum = cell['title']['$t'].substring(1, 2) - 1
+                colnum = cell['title']['$t'].substring(0, 1).charCodeAt(0) - 65;
+                content = cell['content']['$t']
+                // Get Headers
+                if (rownum == 0) {
+                headers.push(content.trim())
+                }
+                // Build out rows
+                if (rows[rownum] === undefined) {
+                rows[rownum] = {}
+                }
+                rows[rownum][headers[colnum]] = content
+                });
+                document.getElementById("put").innerHTML = JSON.stringify(rows)
+                })
+            </div>
+            <h3>Step 2: Invoke the Function</h3>
+            <p>You can then invoke the function above using your own arguments and store its return value in a variable like so.</p>
+            <div class='code p-5 rounded mb-5 bg-light'>
+                let sheetdata = sheetToJSON($URL, $SHEET_NUMBER, $FIRST_ROW_HEADER, $KEEP_FIRST_ROW, $PARSE_NUMS);
+            </div> -->
+        </div>
+    </main>
+    <footer class='footer bg-light p-5'>
+        <div class='container'>
+            <a href="https://www.github.com/tasnias" target="new">
+                GitHub
+            </a>
+        </div>
+    </footer>
+</body>
+
+</html>
